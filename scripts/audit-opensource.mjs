@@ -6,6 +6,10 @@
  */
 import { execSync } from 'node:child_process';
 import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 const RULES = [
   { name: '品牌词', pattern: /kestrel/i },
@@ -19,11 +23,12 @@ const RULES = [
 ];
 
 const SKIP = [
+  'scripts/audit-opensource.mjs', // 跳过自身（词表含敏感词）
   'package-lock.json',
   'docs/assets/',
 ];
 
-const files = execSync('git ls-files', { encoding: 'utf-8' })
+const files = execSync('git ls-files', { cwd: REPO_ROOT, encoding: 'utf-8' })
   .split('\n').map((s) => s.trim()).filter(Boolean);
 
 let hits = 0;
@@ -31,7 +36,7 @@ for (const file of files) {
   if (SKIP.some((s) => file.startsWith(s) || file === s)) continue;
   let content;
   try {
-    content = fs.readFileSync(file, 'utf-8');
+    content = fs.readFileSync(path.join(REPO_ROOT, file), 'utf-8');
   } catch {
     continue;
   }
