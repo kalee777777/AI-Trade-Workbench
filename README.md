@@ -21,25 +21,36 @@
 | 7 | 🤖 AI 提示词库 | 客户开发/开发信/询盘回复/谈判/催款场景提示词，变量槽自动填充，一键复制 |
 | 8 | ⚙️ 设置 | 个人信息（喂给提示词库）/ **独立站对接（URL+API Key）** / 数据备份恢复 |
 
-## 🚀 快速开始（P4 开发完成后可用）
+## 🚀 快速开始
 
 ```bash
 git clone <本仓库地址>
 cd ai-trade-workbench
-npm install
-npm run dev        # 打开 http://localhost:5188
+npm install        # 国内网络慢可用: npm install --registry=https://registry.npmmirror.com
+npm run dev        # 打开 http://localhost:5173（API 服务自动同起在 5189）
 ```
+
+- **默认密码 `admin123`**（登录后请立即在「设置 → 账号安全」修改；可用 `.env` 的 `ADMIN_PASSWORD` 自定义初始密码）
+- 首次启动自动生成 `data/` 目录（内置示例数据，可随意删改）；全部业务数据都在本地 JSON 文件，零数据库
+- 生产部署：`npm run build && npm start` → http://localhost:5189（单端口含前端，改 `PORT` 环境变量换端口）
+
+## 🔗 对接独立站（询盘自动同步）
+
+1. 部署好 [AI-Trade-OfficialSite-Admin](../AI-Trade-OfficialSite-Admin) 独立站
+2. 独立站 Admin「询盘管理 → API Keys」签发一把 Key（明文只显示一次）
+3. 本工作台「设置 → 独立站对接」填站点地址 + Key → **测试连接** → **立即同步**
+4. 之后可打开「每日自动同步」：新询盘自动进询盘池，并生成 48h 内回复待办
 
 ## 🛠️ 技术形态
 
-React 18 + Vite + Express + JSON 文件存储（`data/*.json`）——已验证的极简架构：零数据库、单端口、数据随时备份/导出 CSV。单管理员账号。
+React 18 + Vite + Express + JSON 文件存储（`data/*.json`）——零数据库、`npm run dev` 一键起（API 5189 + 前端 5173 代理）。单管理员鉴权（bcrypt + HMAC 签名 cookie）。设计令牌与独立站模板同源（`src/styles.css` 改 4 个 HSL 变量换肤）。
 
 ## 🗺️ 开发路线
 
 - [x] **P0**：repo 初始化 + 数据模型定义 + 同步契约冻结
-- [ ] **P4**（11/10–11/19）：八大模块实现 + 独立站同步客户端 + 备份导出
-- [ ] **P5**：AI 提示词库内容（约 12 条场景 × CodeX/WorkBuddy/Trae 三版本）
-- [ ] **P6**：小白文档 + FAQ
+- [x] **P4**（2026-11-02）：八大模块全部实现 + 独立站同步客户端（测试连接/立即同步/每日自动/去重/48h 待办）——与实站 E2E 打通
+- [x] **P5 起步**：内置 6 条场景提示词（变量自动填充）；完整 12 条 × 三工具版本随课程提供
+- [ ] **P6**：小白文档 + FAQ 手册
 
 详见 `docs/ROADMAP.md`。
 

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "t-demo-001",
+    "title": "跟进 Acme：目录已读未回，发案例打消顾虑",
+    "clientId": "cl-demo-001",
+    "due": "2026-11-01",
+    "execState": "pending",
+    "done": false,
+    "createdAt": "2026-10-28T10:00:00.000Z"
+  },
+  {
+    "id": "t-demo-002",
+    "title": "Berlin 首单生产中期：拍产线照片给客户",
+    "clientId": "cl-demo-002",
+    "due": "2026-11-05",
+    "execState": "scheduled",
+    "done": false,
+    "createdAt": "2026-10-30T10:00:00.000Z"
+  }
+]

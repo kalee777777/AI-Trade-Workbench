@@ -1,0 +1,42 @@
+[
+  {
+    "id": "cl-demo-001",
+    "name": "Acme Trading Co., Ltd.",
+    "country": "United States",
+    "contact": "John Smith · Purchasing Manager",
+    "email": "john@acmetrading.example.com",
+    "phone": "+1 555 010 0001",
+    "grade": "B",
+    "stage": "intent",
+    "source": "exhibition",
+    "product": "Product A",
+    "tags": ["US", "OEM"],
+    "notes": "示例数据：可删除。年度采购约 4 个高柜，对包装有定制要求。",
+    "lastFollowUp": "2026-10-28",
+    "nextFollowUp": "2026-11-11",
+    "timeline": [
+      { "date": "2026-10-20", "content": "展会上交换名片，了解采购需求", "method": "exhibition", "result": "拿到联系方式", "nextStep": "发送目录与首封信" },
+      { "date": "2026-10-28", "content": "发送公司目录 + Product A 规格书", "method": "email", "result": "已读未回", "nextStep": "3 天后跟进" }
+    ]
+  },
+  {
+    "id": "cl-demo-002",
+    "name": "Berlin Baustoff GmbH",
+    "country": "Germany",
+    "contact": "Anna Müller · Import Manager",
+    "email": "anna@berlinbaustoff.example.com",
+    "phone": "+49 30 0000 0002",
+    "grade": "A",
+    "stage": "won",
+    "source": "website",
+    "product": "Product C",
+    "tags": ["EU", "返单客户"],
+    "notes": "示例数据：可删除。首单 40HQ 已出货，目标发展返单。",
+    "lastFollowUp": "2026-10-30",
+    "nextFollowUp": "2026-11-06",
+    "timeline": [
+      { "date": "2026-09-15", "content": "独立站询盘进线，索要 Product C 报价", "method": "email", "result": "已报价", "nextStep": "跟进反馈" },
+      { "date": "2026-10-30", "content": "收到 30% 定金，安排生产", "method": "email", "result": "订单 PO-20261030-01 成立", "nextStep": "生产完成后约验货" }
+    ]
+  }
+]

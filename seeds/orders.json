@@ -1,0 +1,21 @@
+[
+  {
+    "id": "PO-20261030-01",
+    "clientId": "cl-demo-002",
+    "quoteId": null,
+    "amount": 18500,
+    "currency": "USD",
+    "depositPct": 30,
+    "stages": {
+      "pi": "2026-10-30",
+      "deposit": "2026-10-30",
+      "production": null,
+      "inspection": null,
+      "shipment": null,
+      "balance": null,
+      "bl": null,
+      "received": null
+    },
+    "status": "in_production"
+  }
+]

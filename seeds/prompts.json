@@ -1,0 +1,44 @@
+[
+  {
+    "id": "p-first-email",
+    "category": "outreach",
+    "scene": "开发信首信",
+    "title": "Cold outreach first email（首触开发信）",
+    "body": "You are a senior B2B foreign-trade salesperson. Write a first-touch cold email to {{name}} at {{company}} ({{country}}), who may purchase {{product}}.\nRequirements: subject line under 8 words; opening with one specific observation about their industry/market (no flattery); 3 short paragraphs max; one clear low-friction CTA (asking for their purchasing plan, not a meeting); professional signature of {{your_name}} from {{company}}. Output subject + body only."
+  },
+  {
+    "id": "p-followup-3d",
+    "category": "followup",
+    "scene": "跟进信（首触后 3 天）",
+    "title": "Follow-up after first email (day 3)",
+    "body": "Write a short follow-up email to {{name}} at {{company}} — my first email 3 days ago about {{product}} got no reply.\nRequirements: under 80 words; do NOT repeat the first email; add ONE new piece of value (a relevant case study, a market note, or a spec sheet); end with an easy yes/no question. Sign as {{your_name}}."
+  },
+  {
+    "id": "p-inquiry-reply",
+    "category": "reply",
+    "scene": "询盘回复",
+    "title": "Reply to an incoming inquiry（询盘首次回复）",
+    "body": "I received this inquiry: \"{{inquiry_text}}\". Write a professional first reply as {{your_name}} from {{company}}.\nRequirements: confirm key requirements point by point (product/spec/quantity/port); give price range or ask the 2-3 clarifying questions needed to quote precisely; mention lead time; propose next step clearly. Concise, no empty adjectives."
+  },
+  {
+    "id": "p-quote-followup",
+    "category": "quote",
+    "scene": "报价后跟进",
+    "title": "Follow up after sending a quotation",
+    "body": "I sent a quotation for {{product}} to {{name}} at {{company}} {{days_ago}} days ago; they opened it but did not reply. Write a follow-up email.\nRequirements: do not push \"any update?\"; provide NEW decision-helping information (comparable order feedback / cost breakdown option / flexible MOQ); include a soft deadline reason (raw material price trend); under 100 words. Sign as {{your_name}}."
+  },
+  {
+    "id": "p-negotiate-price",
+    "category": "negotiate",
+    "scene": "价格谈判",
+    "title": "Respond to price objection（客户嫌贵）",
+    "body": "{{name}} from {{company}} says our {{product}} price is 8% higher than another supplier. Write a reply that defends price with value instead of discounting.\nRequirements: acknowledge respectfully; use cost-transparency language (material grade / QC cost / after-sales); offer structural alternatives (adjust spec, larger qty tier, partial first order); keep the relationship warm. Sign as {{your_name}}."
+  },
+  {
+    "id": "p-payment-reminder",
+    "category": "payment",
+    "scene": "催尾款",
+    "title": "Balance payment reminder（礼貌催尾款）",
+    "body": "Order {{order_no}} for {{company}} has shipped and the balance payment is {{overdue_days}} days overdue. Write a polite but clear reminder to {{name}}.\nRequirements: attach value (BL copy / shipment photos as reason to write); state amount and due date once, clearly; offer help if there is any internal approval issue; end with a specific date expectation. Sign as {{your_name}}."
+  }
+]

@@ -1,0 +1,12 @@
+[
+  {
+    "id": "QT-20261028-01",
+    "clientId": "cl-demo-001",
+    "items": [
+      { "name": "Product A", "spec": "Standard spec", "qty": 1000, "unit": "pcs", "unitPrice": 12.5, "currency": "USD" }
+    ],
+    "validUntil": "2026-11-28",
+    "status": "sent",
+    "note": "示例报价：含出口木托包装"
+  }
+]

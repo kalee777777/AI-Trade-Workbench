@@ -1,0 +1,32 @@
+{
+  "name": "ai-trade-workbench",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Lightweight AI workbench for foreign-trade salespeople — clients, inquiries, quotes, orders, tasks and a built-in AI prompt library. Runs locally with zero database.",
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,green \"node server/index.js\" \"vite\"",
+    "build": "vite build",
+    "start": "node server/index.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.19.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.19",
+    "concurrently": "^8.2.2",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.4",
+    "typescript": "^5.4.5",
+    "vite": "^5.4.10"
+  }
+}

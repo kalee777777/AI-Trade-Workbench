@@ -1,0 +1,17 @@
+{
+  "profile": {
+    "yourName": "Your Name",
+    "company": "Your Company Co., Ltd.",
+    "products": "Product A, Product B, Product C, Product D",
+    "market": "North America, Europe, Southeast Asia"
+  },
+  "siteLink": {
+    "url": "",
+    "apiKey": "",
+    "autoSync": false,
+    "lastSyncAt": null
+  },
+  "auth": {
+    "passwordHash": ""
+  }
+}
