@@ -1,0 +1,16 @@
+# dependencies
+/node_modules
+
+# build
+/dist
+
+# 运行时数据（学员自己的业务数据，不入库；首次启动从 seeds 模板生成）
+/data/*.json
+
+# 环境变量
+.env
+.env.local
+
+# misc
+.DS_Store
+*.log
