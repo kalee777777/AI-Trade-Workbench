@@ -19,6 +19,7 @@
 - [ ] 模块 6 任务看板（todo/doing/done + 客户跟进专区 + 完成回写时间线）
 - [ ] 模块 8 设置（个人信息 / 独立站对接 / 备份恢复）
 - [ ] 独立站同步客户端（按 CONTRACT-inquiry-sync.md：测试连接 / 手动+每日同步 / 去重 / 转客户 / 48h 待办）
+  - ✅ 对端就绪（2026-11-02）：独立站 `GET /api/sync/inquiries` 已上线并通过 E2E（Key 鉴权/since+cursor 增量分页/限流 60 次/h）。本侧实现时直接按契约调即可。
 - [ ] 验收 S1：clone → npm install → npm run dev 十分钟可用
 
 ## P5 AI 提示词库（计划 11/17–21）
