@@ -24,8 +24,8 @@
 ## 🚀 快速开始
 
 ```bash
-git clone <本仓库地址>
-cd ai-trade-workbench
+git clone https://github.com/kalee777777/AI-Trade-Workbench.git
+cd AI-Trade-Workbench
 npm install        # 国内网络慢可用: npm install --registry=https://registry.npmmirror.com
 npm run dev        # 打开 http://localhost:5173（API 服务自动同起在 5189）
 ```
