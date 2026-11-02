@@ -5,6 +5,8 @@ import type { PromptTemplate, Profile } from '../types';
 const CATEGORY_LABEL: Record<string, string> = {
   outreach: '客户开发', followup: '跟进激活', reply: '询盘回复',
   quote: '报价管理', negotiate: '谈判博弈', payment: '收款催款',
+  research: '背调分析', market: '市场摸底', grading: '询盘分级',
+  review: '复盘管理', wake: '沉睡唤醒', sample: '样品推进',
 };
 
 /** AI 提示词库：变量槽用个人信息自动填充，一键复制。 */
@@ -55,7 +57,8 @@ export default function Prompts() {
     <div>
       <h1 className="page-title">AI 提示词库</h1>
       <p className="mt-1 text-xs text-muted">
-        {'{{your_name}}/{{company}} 等变量已用你的「设置 → 个人信息」自动填充；【】占位符粘贴前替换即可。复制后投喂给 CodeX / WorkBuddy / Trae。'}
+        {'{{your_name}}/{{company}} 等变量已用你的「设置 → 个人信息」自动填充；【】占位符粘贴前替换即可。'}
+        三工具用法差异见仓库 <code className="rounded bg-brand-tint px-1">prompts/TOOLS-GUIDE.md</code>，二次开发提示词见 <code className="rounded bg-brand-tint px-1">prompts/extend-prompts.md</code>。
       </p>
 
       <div className="mt-4 flex flex-wrap gap-2">

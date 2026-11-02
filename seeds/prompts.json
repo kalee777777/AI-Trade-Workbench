@@ -4,41 +4,83 @@
     "category": "outreach",
     "scene": "开发信首信",
     "title": "Cold outreach first email（首触开发信）",
-    "body": "You are a senior B2B foreign-trade salesperson. Write a first-touch cold email to {{name}} at {{company}} ({{country}}), who may purchase {{product}}.\nRequirements: subject line under 8 words; opening with one specific observation about their industry/market (no flattery); 3 short paragraphs max; one clear low-friction CTA (asking for their purchasing plan, not a meeting); professional signature of {{your_name}} from {{company}}. Output subject + body only."
+    "body": "You are a senior B2B foreign-trade salesperson. Write a first-touch cold email to {{name}} at {{company}} ({{country}}), who may purchase {{product}}.\nRequirements: subject line under 8 words; opening with one specific observation about their industry/market (no flattery); 3 short paragraphs max; one clear low-friction CTA (asking for their purchasing plan, not a meeting); professional signature of {{your_name}} from {{company}}. Output subject + body only, in English."
   },
   {
     "id": "p-followup-3d",
     "category": "followup",
     "scene": "跟进信（首触后 3 天）",
     "title": "Follow-up after first email (day 3)",
-    "body": "Write a short follow-up email to {{name}} at {{company}} — my first email 3 days ago about {{product}} got no reply.\nRequirements: under 80 words; do NOT repeat the first email; add ONE new piece of value (a relevant case study, a market note, or a spec sheet); end with an easy yes/no question. Sign as {{your_name}}."
+    "body": "Write a short follow-up email to {{name}} at {{company}} — my first email 3 days ago about {{product}} got no reply.\nRequirements: under 80 words; do NOT repeat the first email; add ONE new piece of value (a relevant case study, a market note, or a spec sheet); end with an easy yes/no question. Sign as {{your_name}}. Output in English."
   },
   {
     "id": "p-inquiry-reply",
     "category": "reply",
     "scene": "询盘回复",
     "title": "Reply to an incoming inquiry（询盘首次回复）",
-    "body": "I received this inquiry: \"{{inquiry_text}}\". Write a professional first reply as {{your_name}} from {{company}}.\nRequirements: confirm key requirements point by point (product/spec/quantity/port); give price range or ask the 2-3 clarifying questions needed to quote precisely; mention lead time; propose next step clearly. Concise, no empty adjectives."
+    "body": "I received this inquiry: \"{{inquiry_text}}\". Write a professional first reply as {{your_name}} from {{company}}.\nRequirements: confirm key requirements point by point (product/spec/quantity/port); give price range or ask the 2-3 clarifying questions needed to quote precisely; mention lead time; propose next step clearly. Concise, no empty adjectives. Output in English."
   },
   {
     "id": "p-quote-followup",
     "category": "quote",
     "scene": "报价后跟进",
     "title": "Follow up after sending a quotation",
-    "body": "I sent a quotation for {{product}} to {{name}} at {{company}} {{days_ago}} days ago; they opened it but did not reply. Write a follow-up email.\nRequirements: do not push \"any update?\"; provide NEW decision-helping information (comparable order feedback / cost breakdown option / flexible MOQ); include a soft deadline reason (raw material price trend); under 100 words. Sign as {{your_name}}."
+    "body": "I sent a quotation for {{product}} to {{name}} at {{company}} {{days_ago}} days ago; they opened it but did not reply. Write a follow-up email.\nRequirements: do not push \"any update?\"; provide NEW decision-helping information (comparable order feedback / cost breakdown option / flexible MOQ); include a soft deadline reason (raw material price trend); under 100 words. Sign as {{your_name}}. Output in English."
   },
   {
     "id": "p-negotiate-price",
     "category": "negotiate",
     "scene": "价格谈判",
     "title": "Respond to price objection（客户嫌贵）",
-    "body": "{{name}} from {{company}} says our {{product}} price is 8% higher than another supplier. Write a reply that defends price with value instead of discounting.\nRequirements: acknowledge respectfully; use cost-transparency language (material grade / QC cost / after-sales); offer structural alternatives (adjust spec, larger qty tier, partial first order); keep the relationship warm. Sign as {{your_name}}."
+    "body": "{{name}} from {{company}} says our {{product}} price is 8% higher than another supplier. Write a reply that defends price with value instead of discounting.\nRequirements: acknowledge respectfully; use cost-transparency language (material grade / QC cost / after-sales); offer structural alternatives (adjust spec, larger qty tier, partial first order); keep the relationship warm. Sign as {{your_name}}. Output in English."
   },
   {
     "id": "p-payment-reminder",
     "category": "payment",
     "scene": "催尾款",
     "title": "Balance payment reminder（礼貌催尾款）",
-    "body": "Order {{order_no}} for {{company}} has shipped and the balance payment is {{overdue_days}} days overdue. Write a polite but clear reminder to {{name}}.\nRequirements: attach value (BL copy / shipment photos as reason to write); state amount and due date once, clearly; offer help if there is any internal approval issue; end with a specific date expectation. Sign as {{your_name}}."
+    "body": "Order {{order_no}} for {{company}} has shipped and the balance payment is {{overdue_days}} days overdue. Write a polite but clear reminder to {{name}}.\nRequirements: attach value (BL copy / shipment photos as reason to write); state amount and due date once, clearly; offer help if there is any internal approval issue; end with a specific date expectation. Sign as {{your_name}}. Output in English."
+  },
+  {
+    "id": "p-customer-research",
+    "category": "research",
+    "scene": "客户背景调查",
+    "title": "Customer background research outline（背调提纲）",
+    "body": "Act as a B2B export research assistant for {{your_name}} from {{company}}. Build a background research outline for a potential buyer \"{{company}}\" in {{country}} who may purchase {{product}}.\nOutput five sections: 1) Who they are (business type, scale signals) 2) What they likely buy (product-line fit with ours) 3) Where they currently source (competitor regions/suppliers) 4) Who likely decides (role titles to verify) 5) Best entry angle for us.\nEvery point must be labeled [fact] / [inference] / [to-confirm]. End with a table + 3 recommended next actions. Use web search when available; output in Chinese."
+  },
+  {
+    "id": "p-market-brief",
+    "category": "market",
+    "scene": "市场摸底",
+    "title": "Quick market scan（出口市场快扫）",
+    "body": "Act as a market analyst. Give a quick market scan for exporting {{product}} from China to {{country}}.\nOutput: demand trend (3 bullets); main import channels & buyer types (3 bullets); expected price band (range + reasoning); top 3 risks (regulatory / logistics / payment); and one clear enter-or-wait recommendation with reasoning.\nEvery claim labeled [fact] / [inference] / [to-confirm]. Under 300 words, output in Chinese."
+  },
+  {
+    "id": "p-inquiry-grading",
+    "category": "grading",
+    "scene": "询盘分级",
+    "title": "Inquiry triage（A–D 分级辅助）",
+    "body": "Act as an inquiry triage assistant for a {{product}} exporter.\nGrade this inquiry A/B/C/D using the rubric: A = specific quantity + clear spec + verifiable company; B = hits 2 of 3; C = vague but real buyer; D = unverifiable or scam signals (urgent off-platform chat, asks to click links, zero spec but pushes order/payment).\nInquiry: \"{{inquiry_text}}\"\nOutput in Chinese: 等级 + 三条关键信号依据 + 建议回复深度（详细报价/范围报价/培育回复/终止）+ 一条风险提示（若有）. Be decisive."
+  },
+  {
+    "id": "p-weekly-review",
+    "category": "review",
+    "scene": "周复盘",
+    "title": "Weekly sales review（本周复盘）",
+    "body": "Act as my blunt sales coach. Below are this week's follow-up events from my CRM:\n{{events_text}}\nOutput in Chinese: ① 三个做得好的动作 ② 三个卡点及最可能的原因 ③ 需要升级投入的客户（仅 A/B 级）④ 下周前 5 项行动（按价值排序，具体到客户名和动作）。要求直接了当，不要泛泛而谈。"
+  },
+  {
+    "id": "p-dormant-wake",
+    "category": "wake",
+    "scene": "沉睡客户唤醒",
+    "title": "Re-activate a dormant customer（沉睡唤醒）",
+    "body": "Write a re-activation email to {{name}} at {{company}} — we discussed {{product}} more than 3 months ago and they went silent.\nRequirements: reference one specific detail from our history without guilt-tripping; lead with NEW value (new product line / market change / a relevant order case); soft CTA asking whether their purchasing plan for next quarter is taking shape; under 90 words; sign {{your_name}}. Output in English."
+  },
+  {
+    "id": "p-sample-followup",
+    "category": "sample",
+    "scene": "样品跟进",
+    "title": "Follow up after sending samples（寄样后推进）",
+    "body": "We shipped samples of {{product}} to {{name}} on {{sent_date}} (tracking {{tracking_no}}). Write a follow-up email.\nRequirements: confirm delivery status; offer 3 concrete evaluation checkpoints (e.g. spec tolerance / surface finish / packaging) and ask which one they want our engineering support on; gently set an expectation for bulk-order timeline so sampling leads somewhere. Under 110 words, sign {{your_name}}. Output in English."
   }
 ]

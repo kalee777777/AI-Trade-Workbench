@@ -56,7 +56,10 @@ React 18 + Vite + Express + JSON 文件存储（`data/*.json`）——零数据�
 
 ## 🤖 用 AI 扩展功能
 
-仓库内置 `prompts/` 提示词库（P5 提供）：新增行业字段、改看板分组、加统计报表——把提示词丢给 CodeX / WorkBuddy / Trae 即可，不需要自己会写代码。
+- **业务向 12 条场景提示词**（App 内「AI 提示词」页）：开发信首信/跟进激活/询盘回复/报价跟进/价格谈判/催尾款/客户背调/市场摸底/询盘分级/周复盘/沉睡唤醒/样品推进——`{{your_name}}` 等变量用你的设置自动填充，一键复制即用
+- **三工具指南** [`prompts/TOOLS-GUIDE.md`](prompts/TOOLS-GUIDE.md)：CodeX/WorkBuddy/Trae 各自强项、业务提示词通用用法、工程提示词三工具模板
+- **二开提示词** [`prompts/extend-prompts.md`](prompts/extend-prompts.md)：换肤/加字段/改看板/加统计页/导报告——写明涉及文件，AI 不用猜
+- 完整行业话术库（1+7 开发信序列全量版）随课程提供
 
 ## 📄 License
 
