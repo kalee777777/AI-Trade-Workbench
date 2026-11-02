@@ -24,6 +24,13 @@
 - [x] UI 冒烟 4/4（登录/仪表盘/客户台账/询盘池独立站标记）+ 截图 3 张入 docs/assets
 - [x] 验收 S1 ✓：clone → install → dev 即起，种子数据可演示
 
+## P6 文档物料（✅ 2026-11-02 完成）
+
+- [x] 部署与数据说明 `docs/DEPLOY.md`：本地/VPS + 备份/搬家/升级
+- [x] 常见问题 FAQ `docs/FAQ.md`：12 类症状-解法（含忘记密码重置法）
+- [x] 架构与二开指南 `docs/EXTEND.md`：三大机制（节奏引擎/任务回写/同步客户端）+ 加字段/加页面路径
+- [x] **泄密审计门禁**：`scripts/audit-opensource.mjs` + `.github/workflows/audit.yml`（审计+typecheck+build；本地实测 0 命中）
+
 ## P5 AI 提示词库（✅ 2026-11-02 完成）
 
 - [x] 业务向 12 条全量：客户开发/跟进激活/询盘回复/报价管理/谈判博弈/收款催款/背调分析/市场摸底/询盘分级/复盘管理/沉睡唤醒/样品推进（App 内一键复制，{{变量}}自动填充，证据分级 [fact]/[inference]/[to-confirm] 内置于背调与市场类）

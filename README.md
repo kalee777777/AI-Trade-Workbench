@@ -61,6 +61,16 @@ React 18 + Vite + Express + JSON 文件存储（`data/*.json`）——零数据�
 - **二开提示词** [`prompts/extend-prompts.md`](prompts/extend-prompts.md)：换肤/加字段/改看板/加统计页/导报告——写明涉及文件，AI 不用猜
 - 完整行业话术库（1+7 开发信序列全量版）随课程提供
 
+## 📚 文档导航
+
+| 文档 | 内容 |
+|---|---|
+| [部署与数据说明 DEPLOY](docs/DEPLOY.md) | 本地/VPS 部署、数据备份与搬家、升级 |
+| [常见问题 FAQ](docs/FAQ.md) | 忘记密码、端口关系、同步失败等 12 类排查 |
+| [架构与二开 EXTEND](docs/EXTEND.md) | 目录地图、跟进节奏引擎等三大机制、加字段/加页面 |
+| [同步契约 CONTRACT](docs/CONTRACT-inquiry-sync.md) | 询盘同步 API v1（与独立站仓库同文） |
+| [三工具指南](prompts/TOOLS-GUIDE.md) · [二开提示词](prompts/extend-prompts.md) | CodeX/WorkBuddy/Trae 用法 + 6 条现成二开提示词 |
+
 ## 📄 License
 
 MIT — 可免费商用与二次开发。
