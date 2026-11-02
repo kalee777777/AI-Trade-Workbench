@@ -1,6 +1,13 @@
 # 路线图（Roadmap）
 
 > 对应总体规划 P0–P7；实现采用「蓝本重构」路线（复用架构模式，代码全新编写）。
+> **v0.1.0 已发布**：https://github.com/kalee777777/AI-Trade-Workbench/releases/tag/v0.1.0
+
+## P7 GitHub 上架（✅ 2026-11-02）
+
+- [x] 公开仓库 <https://github.com/kalee777777/AI-Trade-Workbench>，CI 门禁（泄密审计 + typecheck + 构建）实测通过
+- [x] v0.1.0 Release 发布
+- [x] 课程对接方案定稿（主项目侧文档，含 5 节实训课件稿 + 交付公告文案），待 Kalee 审定后入课件语料库走 kb:ship
 
 ## P0 项目冻结（✅ 2026-11-02）
 

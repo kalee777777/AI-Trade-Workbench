@@ -13,7 +13,7 @@ const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..
 
 const RULES = [
   { name: '品牌词', pattern: /kestrel/i },
-  { name: '个人身份', pattern: /kalee|刘琦/i },
+  { name: '个人身份', pattern: /kaleelau|kalee@|刘琦/i }, // 裸名 kalee 不拦（GitHub 公开用户名合法引用），拦高置信标识
   { name: '个人手机号', pattern: /17832383339/ },
   { name: '私有基础设施', pattern: /omni-oneapi|cloudflared/i },
   { name: '第三方私有服务', pattern: /ethunters|小满|okki|unicloud/i },
