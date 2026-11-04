@@ -21,6 +21,13 @@
 | 7 | 🤖 AI 提示词库 | 客户开发/开发信/询盘回复/谈判/催款场景提示词，变量槽自动填充，一键复制 |
 | 8 | ⚙️ 设置 | 个人信息（喂给提示词库）/ **独立站对接（URL+API Key）** / 数据备份恢复 |
 
+## 📦 获取项目（国内优先 gitee）
+
+```bash
+git clone https://gitee.com/kestrelmetal_0/AI-Trade-Workbench.git        # 国内快
+git clone https://github.com/kalee777777/AI-Trade-Workbench.git          # 备选
+```
+
 ## 🚀 快速开始
 
 ```bash
