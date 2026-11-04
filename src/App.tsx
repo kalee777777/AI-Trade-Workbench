@@ -13,6 +13,7 @@ import OrderDetail from './views/OrderDetail';
 import Tasks from './views/Tasks';
 import Prompts from './views/Prompts';
 import Settings from './views/Settings';
+import { BRAND_PRESETS, savedBrandKey, saveBrand, applyBrand } from './theme';
 
 const NAV = [
   { to: '/', label: '📊 仪表盘', end: true },
@@ -24,6 +25,38 @@ const NAV = [
   { to: '/prompts', label: '🤖 AI 提示词' },
   { to: '/settings', label: '⚙️ 设置' },
 ];
+
+const THEME_KEY = 'wb-theme';
+
+function applySavedTheme() {
+  if (localStorage.getItem(THEME_KEY) === 'glass') document.documentElement.classList.add('glass');
+  applyBrand(savedBrandKey());
+}
+
+function BrandSwatches() {
+  const [active, setActive] = useState(savedBrandKey());
+  return (
+    <div className="px-1">
+      <p className="mb-1.5 text-[10px] font-semibold text-muted">主题色</p>
+      <div className="flex flex-wrap gap-1.5">
+        {BRAND_PRESETS.map((p) => (
+          <button
+            key={p.key}
+            title={p.name}
+            onClick={() => { setActive(p.key); saveBrand(p.key); }}
+            className={'h-5 w-5 rounded-full border border-black/10 transition-transform hover:scale-110 ' + (active === p.key ? 'ring-2 ring-offset-1' : '')}
+            style={{ backgroundColor: `hsl(${p.brand})`, ...(active === p.key ? { ['--tw-ring-color' as string]: `hsl(${p.brand})` } : {}) }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function toggleGlassTheme() {
+  const on = document.documentElement.classList.toggle('glass');
+  localStorage.setItem(THEME_KEY, on ? 'glass' : '');
+}
 
 function Shell({ defaultPassword }: { defaultPassword: boolean }) {
   const navigate = useNavigate();
@@ -53,7 +86,11 @@ function Shell({ defaultPassword }: { defaultPassword: boolean }) {
             </NavLink>
           ))}
         </nav>
-        <button onClick={logout} className="btn-outline mt-auto">退出登录</button>
+        <div className="mt-auto space-y-3">
+          <BrandSwatches />
+          <button onClick={toggleGlassTheme} className="btn-outline w-full" title="切换毛玻璃主题">🧊 毛玻璃主题</button>
+          <button onClick={logout} className="btn-outline w-full">退出登录</button>
+        </div>
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
@@ -91,6 +128,7 @@ export default function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    applySavedTheme();
     get<{ ok: boolean; defaultPassword: boolean }>('/auth/me')
       .then((d) => {
         if (d.ok) {

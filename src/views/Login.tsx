@@ -21,8 +21,8 @@ export default function Login({ onLogin }: { onLogin: (defaultPassword: boolean)
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-brand-tint px-4">
-      <div className="card w-full max-w-sm p-8">
+    <div className="beams-bg flex min-h-screen items-center justify-center bg-brand-tint px-4">
+      <div className="card beam-card w-full max-w-sm p-8">
         <div className="mb-6 text-center">
           <p className="text-lg font-extrabold text-ink">外贸工作台</p>
           <p className="mt-1 text-xs text-muted">AI Trade Workbench</p>
@@ -38,7 +38,7 @@ export default function Login({ onLogin }: { onLogin: (defaultPassword: boolean)
             />
           </div>
           {error && <p className="rounded-md bg-red-50 px-3 py-2 text-xs text-red-700">{error}</p>}
-          <button type="submit" className="btn w-full" disabled={busy}>
+          <button type="submit" className="btn btn-shimmer w-full" disabled={busy}>
             {busy ? '登录中…' : '登录'}
           </button>
         </form>

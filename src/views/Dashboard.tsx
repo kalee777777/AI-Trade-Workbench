@@ -38,8 +38,8 @@ export default function Dashboard() {
       <h1 className="page-title">仪表盘</h1>
 
       <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-6">
-        {cards.map((c) => (
-          <Link key={c.label} to={c.to} className="card p-4 hover:shadow-md">
+        {cards.map((c, i) => (
+          <Link key={c.label} to={c.to} className={'card p-4 hover:shadow-md' + (i === 0 ? ' beam-card' : '')}>
             <p className="text-xs font-medium text-muted">{c.label}</p>
             <p className={'mt-1 text-2xl font-extrabold ' + (c.danger ? 'text-red-600' : 'text-brand')}>{c.value}</p>
           </Link>
