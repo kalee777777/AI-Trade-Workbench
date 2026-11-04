@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { load, save, newId, ensureData } from './store.js';
+import { gmailConfigured, pullGmail } from './gmail.mjs';
 import {
   COOKIE_NAME, COOKIE_OPTIONS, getSettings, saveSettings, isDefaultPassword,
   verifyPassword, setPassword, createSessionToken, verifySessionToken,
@@ -18,6 +19,17 @@ import {
  */
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.PORT || 5189);
+
+/* .env 极简装载（KEY=VALUE，# 注释；不引入 dotenv 依赖） */
+(function loadEnvFile() {
+  const p = path.join(__dirname, '..', '.env');
+  if (!fs.existsSync(p)) return;
+  for (const line of fs.readFileSync(p, 'utf8').split('\n')) {
+    const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/);
+    if (m && !(m[1] in process.env)) process.env[m[1]] = m[2].replace(/^["']|["']$/g, '');
+  }
+})();
+
 ensureData();
 
 const app = express();
@@ -203,6 +215,37 @@ app.post('/api/sync/now', async (req, res) => {
     res.status(502).json({ error: `同步失败：${e.message}` });
   }
 });
+
+/* ---------- Gmail 询盘管道（W3 · P0；.env 配 GMAIL_USER 即启用）---------- */
+
+app.post('/api/gmail/pull', async (req, res) => {
+  try {
+    const r = await pullGmail();
+    console.log(`[gmail] 手动拉取 fetched=${r.fetched} kept=${r.kept} skipped=${r.skipped}`);
+    res.json(r);
+  } catch (e) {
+    console.error('[gmail] 拉取失败:', e.message);
+    res.status(500).json({ error: `Gmail 拉取失败：${e.message}` });
+  }
+});
+
+if (gmailConfigured()) {
+  const mins = Number(process.env.GMAIL_POLL_MINUTES || 15);
+  const timer = setInterval(() => {
+    pullGmail()
+      .then((r) => r.ok && console.log(`[gmail] 轮询 fetched=${r.fetched} kept=${r.kept} skipped=${r.skipped}`))
+      .catch((e) => console.error('[gmail] 轮询失败:', e.message));
+  }, mins * 60 * 1000);
+  timer.unref?.();
+  setTimeout(() => {
+    pullGmail()
+      .then((r) => r.ok && console.log(`[gmail] 启动首拉 fetched=${r.fetched} kept=${r.kept}`))
+      .catch((e) => console.error('[gmail] 首拉失败:', e.message));
+  }, 5000);
+  console.log(`[gmail] 询盘管道已启用：每 ${mins} 分钟轮询`);
+} else {
+  console.log('[gmail] 未配置 GMAIL_USER —— 询盘管道未启用（.env 填 GMAIL_USER / GMAIL_APP_PASSWORD 开启）');
+}
 
 /* ---------- 客户 ---------- */
 

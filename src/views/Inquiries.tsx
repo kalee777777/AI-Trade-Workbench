@@ -70,6 +70,7 @@ export default function Inquiries() {
                   <span className="font-mono text-xs text-muted">{i.id}</span>
                   <span className="tag bg-brand-tint text-brand">{INQUIRY_STATUS_LABEL[i.status]}</span>
                   {i.source === 'website' && <span className="tag bg-green-50 text-green-700">独立站{i.sourceDetail ? ` · ${i.sourceDetail}` : ''}</span>}
+                  {i.source === 'gmail' && <span className="tag bg-blue-50 text-blue-700">📧 Gmail{i.sourceDetail ? ` · ${i.sourceDetail.slice(0, 24)}` : ''}</span>}
                   {i.grade && <span className="tag bg-amber-50 text-amber-700">{i.grade} 级</span>}
                 </div>
                 <p className="mt-1.5 text-sm font-bold">{i.name} {i.company && <span className="font-normal text-muted">· {i.company}</span>}</p>

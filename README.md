@@ -41,6 +41,16 @@ npm run dev        # 打开 http://localhost:5173（API 服务自动同起在 51
 3. 本工作台「设置 → 独立站对接」填站点地址 + Key → **测试连接** → **立即同步**
 4. 之后可打开「每日自动同步」：新询盘自动进询盘池，并生成 48h 内回复待办
 
+## 📧 对接 Gmail（询盘自动进池）
+
+让询盘邮件自动流进询盘池（与独立站表单并列为第二进食管）：
+
+1. Google 账号开启两步验证 → 生成[应用密码](https://myaccount.google.com/apppasswords)（**不是登录密码**）
+2. 复制 `.env.example` 为 `.env`，填 `GMAIL_USER` / `GMAIL_APP_PASSWORD`
+3. 重启工作台 —— 自动每 15 分钟拉取：规则清洗（机器信/订阅信/中文日常信出局）→ 评分判断是否询盘 → 抽取姓名/公司/国家/产品/正文入池（蓝标 📧 Gmail）
+
+增量断点续传（`data/gmail-state.json`），永不重复入池；凭据只在本机 `.env`（gitignored）。手动触发：登录后 `POST /api/gmail/pull`。
+
 ## 🛠️ 技术形态
 
 React 18 + Vite + Express + JSON 文件存储（`data/*.json`）——零数据库、`npm run dev` 一键起（API 5189 + 前端 5173 代理）。单管理员鉴权（bcrypt + HMAC 签名 cookie）。设计令牌与独立站模板同源（`src/styles.css` 改 4 个 HSL 变量换肤）。
