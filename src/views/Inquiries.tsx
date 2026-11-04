@@ -76,6 +76,7 @@ export default function Inquiries() {
                 <p className="mt-1.5 text-sm font-bold">{i.name} {i.company && <span className="font-normal text-muted">· {i.company}</span>}</p>
                 <p className="text-xs text-muted">{i.email} {i.phone && `· ${i.phone}`} · {i.country || '未知地区'} · {fmtDateTime(i.receivedAt)}</p>
                 {i.product && <p className="mt-1 text-xs">意向产品：<span className="font-semibold">{i.product}</span></p>}
+                {i.signal && <p className="mt-0.5 text-xs text-brand">⚡ {i.signal}</p>}
                 <p className="mt-1 max-w-2xl text-sm text-muted">{i.message}</p>
               </div>
               <div className="flex shrink-0 flex-col items-end gap-2">

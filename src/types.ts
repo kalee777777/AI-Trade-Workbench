@@ -41,6 +41,8 @@ export interface Inquiry {
   message: string;
   source: string;
   sourceDetail?: string;
+  /** LLM 分诊的一句话采购信号（Gmail 管道 P1） */
+  signal?: string;
   pageUrl?: string;
   status: 'new' | 'graded' | 'replied' | 'quoted' | 'won' | 'closed';
   grade: Grade | null;

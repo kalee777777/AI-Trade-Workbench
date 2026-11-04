@@ -51,6 +51,8 @@ npm run dev        # 打开 http://localhost:5173（API 服务自动同起在 51
 
 增量断点续传（`data/gmail-state.json`），永不重复入池；凭据只在本机 `.env`（gitignored）。手动触发：登录后 `POST /api/gmail/pull`。
 
+**P1 · AI 分诊（可选）**：在 `.env` 里配任意 OpenAI 兼容端点（`LLM_API_BASE` / `LLM_API_KEY` / `LLM_MODEL`，GLM、DeepSeek、Ollama 都行），规则初筛通过的邮件会再送 LLM 精判：识别真假询盘、自动 **A/B/C/D 分级**、修正姓名/公司/国家/产品、生成一句话采购信号（⚡ 显示在询盘卡上）。LLM 失败自动回落纯规则模式，永不阻塞入池。
+
 ## 🛠️ 技术形态
 
 React 18 + Vite + Express + JSON 文件存储（`data/*.json`）——零数据库、`npm run dev` 一键起（API 5189 + 前端 5173 代理）。单管理员鉴权（bcrypt + HMAC 签名 cookie）。设计令牌与独立站模板同源（`src/styles.css` 改 4 个 HSL 变量换肤）。

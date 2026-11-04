@@ -28,6 +28,11 @@ export function gmailConfigured() {
   return Boolean(process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD);
 }
 
+/** P1：LLM 分诊层开关 —— 任何 OpenAI 兼容端点（OpenAI/DeepSeek/GLM/Ollama）均可 */
+export function llmConfigured() {
+  return Boolean(process.env.LLM_API_BASE && process.env.LLM_API_KEY);
+}
+
 function loadState() {
   try { return JSON.parse(fs.readFileSync(STATE_FILE, 'utf8')); } catch { return { uidvalidity: 0, lastUid: 0 }; }
 }
@@ -139,6 +144,48 @@ function cleanBody(text) {
   return out.join('\n').replace(/\n{3,}/g, '\n\n').trim().slice(0, 3000);
 }
 
+/* ---------- P1 · LLM 分诊层（可选；失败自动回落规则层，永不阻塞入池） ---------- */
+
+const LLM_SYSTEM_PROMPT = `你是外贸询盘分诊员。对邮件做两件事：
+1. 判断是否真实 B2B 采购询盘（营销信/订阅/自动通知/无关内容都算否）
+2. 按以下标准分级：
+   A = 强信号：具体产品+数量/规格/交期/目标价任占其二
+   B = 明确产品兴趣但细节不足
+   C = 泛泛咨询（只要目录/价目表，无具体需求）
+   D = 疑似垃圾/采集信/无关
+只输出一个 JSON 对象，不要任何其他文字：
+{"is_inquiry": true/false, "grade": "A"|"B"|"C"|"D", "name": "姓名", "company": "公司", "country": "国家", "product": "意向产品(短语)", "signal": "一句话采购信号(中文,≤30字)"}`;
+
+export async function llmRefine(mail) {
+  const from0 = mail.from?.value?.[0] || {};
+  const r = await fetch(`${process.env.LLM_API_BASE.replace(/\/+$/, '')}/chat/completions`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${process.env.LLM_API_KEY}` },
+    body: JSON.stringify({
+      model: process.env.LLM_MODEL || 'gpt-4o-mini',
+      messages: [
+        { role: 'system', content: LLM_SYSTEM_PROMPT },
+        { role: 'user', content: `发件人: ${from0.name || ''} <${from0.address || ''}>\n主题: ${mail.subject || ''}\n日期: ${mail.date?.toISOString?.() || ''}\n\n正文:\n${cleanBody(mail.text).slice(0, 1600)}` },
+      ],
+      temperature: 0,
+    }),
+    signal: AbortSignal.timeout(25_000),
+  });
+  if (!r.ok) throw new Error(`LLM HTTP ${r.status}`);
+  const data = await r.json();
+  const raw = (data.choices?.[0]?.message?.content || '').replace(/```json|```/g, '').trim();
+  const j = JSON.parse(raw);
+  return {
+    isInquiry: j.is_inquiry !== false,
+    grade: ['A', 'B', 'C', 'D'].includes(j.grade) ? j.grade : null,
+    name: String(j.name || '').slice(0, 60),
+    company: String(j.company || '').slice(0, 80),
+    country: String(j.country || '').slice(0, 40),
+    product: String(j.product || '').slice(0, 120),
+    signal: String(j.signal || '').slice(0, 60),
+  };
+}
+
 /* ---------- 主流程 ---------- */
 
 export async function pullGmail({ maxFetch = 50 } = {}) {
@@ -169,6 +216,8 @@ export async function pullGmail({ maxFetch = 50 } = {}) {
     const inquiries = load('inquiries', []);
     const known = new Set(inquiries.map((i) => i.id));
     let maxUid = state.lastUid || 0;
+    const useLlm = llmConfigured();
+    const llmStat = { called: 0, ok: 0, rejected: 0, failed: 0 };
 
     for (const msg of uids) {
       maxUid = Math.max(maxUid, msg.uid);
@@ -177,31 +226,60 @@ export async function pullGmail({ maxFetch = 50 } = {}) {
       const cls = classify(mail);
       if (cls.keep) {
         const id = `inq-gmail-${msg.uid}`;
-        if (!known.has(id)) {
-          const from0 = mail.from?.value?.[0] || {};
-          inquiries.push({
-            id,
-            receivedAt: (mail.date || new Date()).toISOString(),
-            name: from0.name || (from0.address || '').split('@')[0],
-            email: from0.address || '',
-            company: guessCompany(mail),
-            country: guessCountry(mail),
-            phone: '',
-            product: cleanSubject(mail.subject),
-            message: cleanBody(mail.text),
-            source: 'gmail',
-            sourceDetail: cleanSubject(mail.subject),
-            status: 'new',
-            grade: null,
-          });
-          known.add(id);
-          result.kept++;
+        if (known.has(id)) continue;
+        const from0 = mail.from?.value?.[0] || {};
+
+        // P1：LLM 精判（规则通过者才送审，省 token；失败回落规则层结论）
+        let grade = null;
+        let name = from0.name || (from0.address || '').split('@')[0];
+        let company = guessCompany(mail);
+        let country = guessCountry(mail);
+        let product = cleanSubject(mail.subject);
+        let signal = '';
+        if (useLlm) {
+          llmStat.called++;
+          try {
+            const refined = await llmRefine(mail);
+            llmStat.ok++;
+            if (!refined.isInquiry) {
+              llmStat.rejected++;
+              result.skipped++;
+              result.reasons.push(`#${msg.uid}: llm-rejected(${refined.grade || '?'})`);
+              continue;
+            }
+            grade = refined.grade;
+            if (refined.name) name = refined.name;
+            if (refined.company) company = refined.company;
+            if (refined.country) country = refined.country;
+            if (refined.product) product = refined.product;
+            signal = refined.signal;
+          } catch (e) {
+            llmStat.failed++;
+            console.error(`[gmail] LLM 分诊失败(回落规则层) #${msg.uid}:`, e.message);
+          }
         }
+
+        inquiries.push({
+          id,
+          receivedAt: (mail.date || new Date()).toISOString(),
+          name, email: from0.address || '', company, country,
+          phone: '',
+          product, message: cleanBody(mail.text),
+          source: 'gmail',
+          sourceDetail: cleanSubject(mail.subject),
+          signal,
+          status: 'new',
+          grade,
+        });
+        known.add(id);
+        result.kept++;
       } else {
         result.skipped++;
         result.reasons.push(`#${msg.uid}: ${cls.reasons.join(',')}`);
       }
     }
+
+    if (useLlm) result.llm = llmStat;
 
     save('inquiries', inquiries);
     saveState({ uidvalidity: box.uidValidity, lastUid: maxUid });
