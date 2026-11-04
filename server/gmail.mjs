@@ -21,6 +21,8 @@ import { load, save, newId } from './store.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = path.join(__dirname, '..', 'data');
 const STATE_FILE = path.join(DATA_DIR, 'gmail-state.json');
+export const ATT_DIR = path.join(DATA_DIR, 'attachments');
+const MAX_ATT_SIZE = 10 * 1024 * 1024; // 单附件上限 10MB
 
 /* ---------- 配置 ---------- */
 
@@ -87,6 +89,7 @@ function classify(mail) {
   if (domain && !FREEMAIL.includes(domain)) score += 1; // 企业域加分
   if ((mail.text || '').length > 120) score += 1; // 有正文的诚意信
   if (/(hi|hello|dear)\s+(sir|madam|mr|mrs|team|manager|sir\/madam)/i.test(mail.text || '')) score += 1; // 外贸称呼
+  if ((mail.attachments || []).length > 0) score += 1; // P2：带附件（RFQ/规格书）是强信号
   return { keep: score >= 3, reasons: [`score:${score}`, ...hits.slice(0, 4)] };
 }
 
@@ -142,6 +145,53 @@ function cleanBody(text) {
     out.push(line);
   }
   return out.join('\n').replace(/\n{3,}/g, '\n\n').trim().slice(0, 3000);
+}
+
+/* ---------- P2 · 线程关联 + 附件归档 ---------- */
+
+/** 文件名净化：去路径分隔、压掉 .. 序列、去怪字符、限长 */
+function sanitizeName(name) {
+  const n = String(name || 'file')
+    .replace(/[/\\]/g, '_')
+    .replace(/\.{2,}/g, '.')
+    .replace(/[^\w.\-() ]+/g, '_')
+    .trim();
+  return (n.slice(-80)) || 'file';
+}
+
+/** 附件落盘：data/attachments/<inquiryId>/<时间戳-净化名>；超 10MB 跳过 */
+export function saveAttachment(inquiryId, att) {
+  if (!att?.content || (att.size || 0) > MAX_ATT_SIZE) return null;
+  const dir = path.join(ATT_DIR, inquiryId);
+  fs.mkdirSync(dir, { recursive: true });
+  const stored = `${Date.now()}-${sanitizeName(att.filename)}`;
+  fs.writeFileSync(path.join(dir, stored), att.content);
+  return { name: sanitizeName(att.filename), size: att.size || att.content.length, file: stored };
+}
+
+/** 线程匹配：这封邮件是否是某条 Gmail 询盘的回复？
+ *  三级匹配：① In-Reply-To/References Message-ID 链 ② 同发件人 + 同净化主题 ③ 都不是 → 新询盘 */
+export function findExisting(inquiries, mail) {
+  const msgIdOf = (m) => String(m || '').trim();
+  const inReplyTo = msgIdOf(mail.inReplyTo);
+  const refs = (Array.isArray(mail.references) ? mail.references : mail.references ? [mail.references] : []).map(msgIdOf);
+  const subj = cleanSubject(mail.subject).toLowerCase();
+  const fromAddr = (mail.from?.value?.[0]?.address || '').toLowerCase();
+
+  const index = new Map(); // messageId → inquiry（覆盖原信与已收纳的回复）
+  for (const inq of inquiries) {
+    if (inq.source !== 'gmail') continue;
+    if (inq.messageId) index.set(msgIdOf(inq.messageId), inq);
+    for (const r of inq.replies || []) if (r.messageId) index.set(msgIdOf(r.messageId), inq);
+  }
+  if (inReplyTo && index.has(inReplyTo)) return index.get(inReplyTo);
+  for (const r of refs) if (r && index.has(r)) return index.get(r);
+  if (subj && fromAddr) {
+    return inquiries.find(
+      (i) => i.source === 'gmail' && (i.email || '').toLowerCase() === fromAddr && (i.sourceDetail || '').toLowerCase() === subj,
+    ) || null;
+  }
+  return null;
 }
 
 /* ---------- P1 · LLM 分诊层（可选；失败自动回落规则层，永不阻塞入池） ---------- */
@@ -229,6 +279,26 @@ export async function pullGmail({ maxFetch = 50 } = {}) {
         if (known.has(id)) continue;
         const from0 = mail.from?.value?.[0] || {};
 
+        // P2：线程关联——是已有 Gmail 询盘的回复？挂到原询盘，不另开新盘
+        const existing = findExisting(inquiries, mail);
+        if (existing) {
+          existing.replies = existing.replies || [];
+          existing.replies.push({
+            receivedAt: (mail.date || new Date()).toISOString(),
+            subject: cleanSubject(mail.subject),
+            text: cleanBody(mail.text).slice(0, 2000),
+            messageId: String(mail.messageId || '').trim(),
+          });
+          for (const att of mail.attachments || []) {
+            const rec = saveAttachment(existing.id, att);
+            if (rec) (existing.attachments = existing.attachments || []).push(rec);
+          }
+          known.add(id); // 该 UID 已消费，防重跑重复挂载
+          result.replies = (result.replies || 0) + 1;
+          result.reasons.push(`#${msg.uid}: →线程 ${existing.id}`);
+          continue;
+        }
+
         // P1：LLM 精判（规则通过者才送审，省 token；失败回落规则层结论）
         let grade = null;
         let name = from0.name || (from0.address || '').split('@')[0];
@@ -259,6 +329,14 @@ export async function pullGmail({ maxFetch = 50 } = {}) {
           }
         }
 
+        // P2：附件归档（RFQ/规格书 PDF、图片）
+        const attachments = [];
+        for (const att of mail.attachments || []) {
+          const rec = saveAttachment(id, att);
+          if (rec) attachments.push(rec);
+          else result.reasons.push(`#${msg.uid}: 附件跳过(${att.filename || '?'} 超10MB或无内容)`);
+        }
+
         inquiries.push({
           id,
           receivedAt: (mail.date || new Date()).toISOString(),
@@ -267,6 +345,8 @@ export async function pullGmail({ maxFetch = 50 } = {}) {
           product, message: cleanBody(mail.text),
           source: 'gmail',
           sourceDetail: cleanSubject(mail.subject),
+          messageId: String(mail.messageId || '').trim(),
+          attachments,
           signal,
           status: 'new',
           grade,

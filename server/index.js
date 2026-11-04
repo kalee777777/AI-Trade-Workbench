@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { load, save, newId, ensureData } from './store.js';
-import { gmailConfigured, pullGmail } from './gmail.mjs';
+import { gmailConfigured, pullGmail, ATT_DIR } from './gmail.mjs';
 import {
   COOKIE_NAME, COOKIE_OPTIONS, getSettings, saveSettings, isDefaultPassword,
   verifyPassword, setPassword, createSessionToken, verifySessionToken,
@@ -217,6 +217,20 @@ app.post('/api/sync/now', async (req, res) => {
 });
 
 /* ---------- Gmail 询盘管道（W3 · P0；.env 配 GMAIL_USER 即启用）---------- */
+
+/* P2：附件下载（RFQ/规格书）——只允许下载已登记在询盘上的文件，双防路径穿越 */
+app.get('/api/inquiries/:id/attachments/:file', (req, res) => {
+  const { id, file } = req.params;
+  const inq = load('inquiries', []).find((i) => i.id === id);
+  const rec = inq?.attachments?.find((a) => a.file === file);
+  if (!rec) return res.status(404).json({ error: '附件不存在' });
+  const safeDir = path.resolve(ATT_DIR, id);
+  const abs = path.resolve(safeDir, file);
+  if (!abs.startsWith(safeDir + path.sep) || !fs.existsSync(abs)) {
+    return res.status(404).json({ error: '文件不存在' });
+  }
+  res.download(abs, rec.name);
+});
 
 app.post('/api/gmail/pull', async (req, res) => {
   try {

@@ -43,6 +43,12 @@ export interface Inquiry {
   sourceDetail?: string;
   /** LLM 分诊的一句话采购信号（Gmail 管道 P1） */
   signal?: string;
+  /** 邮件 Message-ID（P2 线程关联用） */
+  messageId?: string;
+  /** 客户后续回复（同一邮件线程，不另开新询盘） */
+  replies?: { receivedAt: string; subject: string; text: string; messageId?: string }[];
+  /** 附件（RFQ/规格书等，存 data/attachments/<id>/） */
+  attachments?: { name: string; size: number; file: string }[];
   pageUrl?: string;
   status: 'new' | 'graded' | 'replied' | 'quoted' | 'won' | 'closed';
   grade: Grade | null;

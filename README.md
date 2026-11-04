@@ -55,6 +55,8 @@ npm run dev        # 打开 http://localhost:5173（API 服务自动同起在 51
 
 **懒人通道**：自己只做「生成应用密码」一步，其余交给你的 AI Agent —— 抄 [prompts/gmail-setup.md](prompts/gmail-setup.md) 的提示词填上邮箱/密码/Key 即可；手动验证用 `npm run gmail:pull`。
 
+**P2 · 线程与附件**：客户的回复邮件（Re:）自动挂到原询盘下（🔁 回复 ×N，不爆池，三级匹配 Message-ID 链 → 同发件人同主题兜底）；邮件附件（RFQ/规格书 PDF）自动归档到 `data/attachments/<询盘>/`，询盘卡上 📎 一键下载（带附件的邮件评分 +1，登录态下载 + 路径穿越双防护）。
+
 ## 🛠️ 技术形态
 
 React 18 + Vite + Express + JSON 文件存储（`data/*.json`）——零数据库、`npm run dev` 一键起（API 5189 + 前端 5173 代理）。单管理员鉴权（bcrypt + HMAC 签名 cookie）。设计令牌与独立站模板同源（`src/styles.css` 改 4 个 HSL 变量换肤）。

@@ -77,6 +77,21 @@ export default function Inquiries() {
                 <p className="text-xs text-muted">{i.email} {i.phone && `· ${i.phone}`} · {i.country || '未知地区'} · {fmtDateTime(i.receivedAt)}</p>
                 {i.product && <p className="mt-1 text-xs">意向产品：<span className="font-semibold">{i.product}</span></p>}
                 {i.signal && <p className="mt-0.5 text-xs text-brand">⚡ {i.signal}</p>}
+                {i.replies && i.replies.length > 0 && (
+                  <p className="mt-0.5 text-xs text-muted">
+                    🔁 回复 ×{i.replies.length} · 最近：{i.replies[i.replies.length - 1].text.slice(0, 60) || i.replies[i.replies.length - 1].subject}
+                  </p>
+                )}
+                {i.attachments && i.attachments.length > 0 && (
+                  <p className="mt-1 text-xs">
+                    📎{' '}
+                    {i.attachments.map((a) => (
+                      <a key={a.file} className="mr-2 text-brand underline" href={`/api/inquiries/${i.id}/attachments/${a.file}`} download>
+                        {a.name}
+                      </a>
+                    ))}
+                  </p>
+                )}
                 <p className="mt-1 max-w-2xl text-sm text-muted">{i.message}</p>
               </div>
               <div className="flex shrink-0 flex-col items-end gap-2">
